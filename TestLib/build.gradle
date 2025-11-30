@@ -1,5 +1,6 @@
 plugins {
     alias(libs.plugins.android.library)
+    id 'maven-publish'
 }
 
 android {
@@ -24,6 +25,28 @@ android {
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
+    }
+}
+
+publishing {
+    publications {
+        TestLib(MavenPublication) {
+            groupId = 'org.bluebananas.lib'
+            artifactId = 'test-lib'
+            version = '1.0.0'
+
+            artifact "$buildDir/outputs/aar/TestLib-release.aar"
+        }
+    }
+    repositories {
+        maven {
+            name = "GitHubPackages"
+            url = uri("https://maven.pkg.github.com/theCoolerGarply/LibraryTest")
+            credentials {
+                username = System.getenv("GITHUB_ACTOR")
+                password = System.getenv("MAVEN_PUBLISH_GITHUB_TOKEN")
+            }
+        }
     }
 }
 
